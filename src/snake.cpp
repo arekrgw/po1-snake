@@ -4,12 +4,17 @@
 CSnake::CSnake(CRect r, char _c):
   CFramedWindow(r, _c)
 {
+  gamePaused = true;
+  level = 1;
 }
 
 void CSnake::paint() {
   CFramedWindow::paint();
 
-  paintInstruction();
+  if(gamePaused) {
+    paintInstruction();
+  }
+
 }
 
 void CSnake::paintInstruction() {
@@ -23,4 +28,17 @@ void CSnake::paintInstruction() {
   printl("arrows - move snake (in play mode) or");
   gotoyx(geom.topleft.y + 7, geom.topleft.x + 4);
   printl("         move window (in pause mode)");
+}
+
+bool CSnake::handleEvent(int key) {
+  if(key == 112) {
+    gamePaused = !gamePaused;
+    return true;
+  }
+
+  if(gamePaused) {
+    return CFramedWindow::handleEvent(key);
+  }
+
+  return false;
 }

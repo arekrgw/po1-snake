@@ -9,8 +9,10 @@ public:
   CSnake(CRect r, char _c = ' ');
 
   void paint();
-
+  bool handleEvent(int key);
 private:
+  bool gamePaused;
+  unsigned int level;
   void paintInstruction();
 };
 
