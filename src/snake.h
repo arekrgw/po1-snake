@@ -13,6 +13,7 @@ public:
 private:
   bool gamePaused;
   unsigned int level;
+  bool showHelp;
   void paintInstruction();
 };
 

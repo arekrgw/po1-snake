@@ -5,13 +5,14 @@ CSnake::CSnake(CRect r, char _c):
   CFramedWindow(r, _c)
 {
   gamePaused = true;
+  showHelp = true;
   level = 1;
 }
 
 void CSnake::paint() {
   CFramedWindow::paint();
 
-  if(gamePaused) {
+  if(gamePaused && showHelp) {
     paintInstruction();
   }
 
@@ -33,6 +34,12 @@ void CSnake::paintInstruction() {
 bool CSnake::handleEvent(int key) {
   if(key == 112) {
     gamePaused = !gamePaused;
+    showHelp = false;
+    return true;
+  }
+
+  if(key == 104 && gamePaused) {
+    showHelp = !showHelp;
     return true;
   }
 
