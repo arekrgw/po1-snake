@@ -19,7 +19,7 @@ void CSnake::paint() {
     paintInstruction();
   }
 
-  if(!gamePaused) {
+  if(!showHelp) {
     gotoyx(geom.topleft.y + 3, geom.topleft.x + 4);
 
     printl("Refresh: %d", rand() % 255);
@@ -42,7 +42,9 @@ void CSnake::paintInstruction() {
 
 bool CSnake::handleEvent(int key) {
   if(key == REFRESH_KEY) {
-    return shouldRefresh();
+    if(shouldRefresh() && !gamePaused) {
+      return true;
+    }
   }
 
   if(key == 112) {
