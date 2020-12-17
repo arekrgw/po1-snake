@@ -62,6 +62,7 @@ public:
   void paint();
   bool handleEvent(int key);
   void insert(CView * v);
+  void doFrameRateCheck();
 };
 
 class CDesktop:public CGroup

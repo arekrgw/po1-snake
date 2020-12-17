@@ -1,5 +1,6 @@
 #include "snake.h"
 #include "screen.h"
+#include <chrono>
 
 CSnake::CSnake(CRect r, char _c):
   CFramedWindow(r, _c)
@@ -7,6 +8,8 @@ CSnake::CSnake(CRect r, char _c):
   gamePaused = true;
   showHelp = true;
   level = 1;
+  timer = std::chrono::high_resolution_clock::now();
+  refresh_rate = std::chrono::milliseconds(1000);
 }
 
 void CSnake::paint() {
@@ -14,6 +17,12 @@ void CSnake::paint() {
 
   if(gamePaused && showHelp) {
     paintInstruction();
+  }
+
+  if(!gamePaused) {
+    gotoyx(geom.topleft.y + 3, geom.topleft.x + 4);
+
+    printl("Refresh: ", rand() % 255);
   }
 
 }
@@ -32,6 +41,15 @@ void CSnake::paintInstruction() {
 }
 
 bool CSnake::handleEvent(int key) {
+  if(key == 1337) {
+    auto newTimer = std::chrono::high_resolution_clock::now();
+    auto elapsedTime = newTimer - timer;
+    if(elapsedTime >= refresh_rate) {
+      timer = newTimer;
+      return true;
+    }
+  }
+
   if(key == 112) {
     gamePaused = !gamePaused;
     showHelp = false;

@@ -149,6 +149,14 @@ CGroup::~CGroup()
     delete(*i);
 }
 
+void CGroup::doFrameRateCheck() {
+  for (list< CView * >::iterator i = children.begin(); i != children.end(); i++){
+    if((*i)->handleEvent(1337)) {
+      (*i)->paint();
+    } 
+  }
+}
+
 CDesktop::CDesktop() : CGroup(CRect())
 {
   init_screen();
@@ -198,5 +206,6 @@ void CDesktop::run()
       paint();
       refresh();
     }
+    doFrameRateCheck();
   }
 }
