@@ -22,7 +22,7 @@ void CSnake::paint() {
   if(!gamePaused) {
     gotoyx(geom.topleft.y + 3, geom.topleft.x + 4);
 
-    printl("Refresh: ", rand() % 255);
+    printl("Refresh: %d", rand() % 255);
   }
 
 }
@@ -41,13 +41,8 @@ void CSnake::paintInstruction() {
 }
 
 bool CSnake::handleEvent(int key) {
-  if(key == 1337) {
-    auto newTimer = std::chrono::high_resolution_clock::now();
-    auto elapsedTime = newTimer - timer;
-    if(elapsedTime >= refresh_rate) {
-      timer = newTimer;
-      return true;
-    }
+  if(key == REFRESH_KEY) {
+    return shouldRefresh();
   }
 
   if(key == 112) {
@@ -63,6 +58,17 @@ bool CSnake::handleEvent(int key) {
 
   if(gamePaused) {
     return CFramedWindow::handleEvent(key);
+  }
+
+  return false;
+}
+
+bool CSnake::shouldRefresh() {
+  auto newTimer = std::chrono::high_resolution_clock::now();
+  auto elapsedTime = newTimer - timer;
+  if(elapsedTime >= refresh_rate) {
+    timer = newTimer;
+    return true;
   }
 
   return false;

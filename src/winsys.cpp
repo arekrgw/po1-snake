@@ -1,6 +1,7 @@
 #include "winsys.h"
 #include "cpoint.h"
 #include "screen.h"
+#include "snake.h"
 
 #include <list>
 #include <string>
@@ -151,7 +152,7 @@ CGroup::~CGroup()
 
 void CGroup::doFrameRateCheck() {
   for (list< CView * >::iterator i = children.begin(); i != children.end(); i++){
-    if((*i)->handleEvent(1337)) {
+    if((*i)->handleEvent(CSnake::REFRESH_KEY)) {
       (*i)->paint();
     } 
   }
