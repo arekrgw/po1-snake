@@ -1,5 +1,6 @@
 #include "snake.h"
 #include "screen.h"
+#include "cpoint.h"
 #include <chrono>
 
 CSnake::CSnake(CRect r, char _c):
@@ -9,7 +10,14 @@ CSnake::CSnake(CRect r, char _c):
   showHelp = true;
   level = 1;
   timer = std::chrono::high_resolution_clock::now();
-  refresh_rate = std::chrono::milliseconds(1000);
+  refresh_rate = std::chrono::milliseconds(500);
+
+  // snake.push_back(CPoint(geom.topleft.x + 22, geom.topleft.y + 10));
+  // snake.push_back(CPoint(geom.topleft.x + 21, geom.topleft.y + 10));
+  // snake.push_back(CPoint(geom.topleft.x + 20, geom.topleft.y + 10));
+  snake.push_back(CPoint(20, 10));
+
+  snakeDirection = DIR_LEFT;
 }
 
 void CSnake::paint() {
@@ -20,10 +28,47 @@ void CSnake::paint() {
   }
 
   if(!showHelp) {
-    gotoyx(geom.topleft.y + 3, geom.topleft.x + 4);
-
-    printl("Refresh: %d", rand() % 255);
+    if(!gamePaused) moveSnake();
+    paintSnake();
   }
+
+}
+
+void CSnake::paintSnake() {
+  for(auto chunk : snake) {
+    gotoyx(geom.topleft.y + chunk.y, geom.topleft.x + chunk.x);
+    printl("#");
+  }
+}
+
+void CSnake::moveSnake() {
+  switch(snakeDirection) {
+    case DIR_LEFT:
+      snake.insert(snake.begin(), CPoint(
+        geom.topleft.x + snake[0].x - 1 == geom.topleft.x ? geom.size.x - 2 : snake[0].x - 1,
+        snake[0].y
+        ));
+    break;
+    case DIR_TOP:
+      snake.insert(snake.begin(), CPoint(
+        snake[0].x, 
+        geom.topleft.y + snake[0].y - 1 == geom.topleft.y ? geom.size.y - 2 : snake[0].y - 1
+        ));
+    break;
+    case DIR_RIGHT:
+      snake.insert(snake.begin(), CPoint(
+        geom.topleft.x + snake[0].x + 1 == geom.topleft.x + geom.size.x - 1 ? 1 : snake[0].x + 1, 
+        snake[0].y
+        ));
+    break;
+    case DIR_DOWN:
+      snake.insert(snake.begin(), CPoint(
+        snake[0].x, 
+        geom.topleft.y + snake[0].y + 1 == geom.topleft.y + geom.size.y - 1 ? 1 : snake[0].y + 1
+        ));
+    break;
+  }
+  snake.pop_back();
 
 }
 
@@ -47,7 +92,13 @@ bool CSnake::handleEvent(int key) {
     }
   }
 
+  if(key == '\t') {
+    gamePaused = true;
+    return false;
+  }
+
   if(key == 112) {
+    if(gamePaused) timer = std::chrono::high_resolution_clock::now();
     gamePaused = !gamePaused;
     showHelp = false;
     return true;
@@ -68,7 +119,7 @@ bool CSnake::handleEvent(int key) {
 bool CSnake::shouldRefresh() {
   auto newTimer = std::chrono::high_resolution_clock::now();
   auto elapsedTime = newTimer - timer;
-  if(elapsedTime >= refresh_rate) {
+  if(elapsedTime > refresh_rate) {
     timer = newTimer;
     return true;
   }
