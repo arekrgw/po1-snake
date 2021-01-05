@@ -16,6 +16,10 @@ struct CPoint
     y+=delta.y;
     return *this;
   }
+  bool operator==(const CPoint& point) {
+    if(x == point.x && y == point.y) return true;
+    else return false;
+  }
 };
 
 struct CRect
