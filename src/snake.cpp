@@ -1,8 +1,8 @@
+#include <chrono>
+#include <algorithm>
 #include "snake.h"
 #include "screen.h"
 #include "cpoint.h"
-#include <chrono>
-#include <algorithm>
 
 CSnake::CSnake(CRect r, char _c):
   CFramedWindow(r, _c)
@@ -10,6 +10,7 @@ CSnake::CSnake(CRect r, char _c):
   gamePaused = true;
   showHelp = true;
   gameOver = false;
+  initialRefreshRate = 300;
   level = 1;
   score = 3;
   refreshRateNum = initialRefreshRate;
