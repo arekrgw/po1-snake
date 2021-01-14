@@ -15,7 +15,7 @@ public:
   
   //ncurses public required functions
   void paint();
-  bool handleEvent(int key);
+  bool handleEvent(int);
 
 private:
   std::vector<CPoint> snake;
@@ -46,7 +46,7 @@ private:
   //game logic functions
   void generateFruit();
   bool checkIfEaten();
-  void resetGame();
+  void resetGame(bool = false);
   void moveSnake();
   void advanceLevel();
   void checkSnakeIntegrity();

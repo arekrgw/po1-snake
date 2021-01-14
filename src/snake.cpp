@@ -7,24 +7,8 @@
 CSnake::CSnake(CRect r, char _c):
   CFramedWindow(r, _c)
 {
-  gamePaused = true;
-  showHelp = true;
-  gameOver = false;
   initialRefreshRate = 300;
-  level = 1;
-  score = 3;
-  refreshRateNum = initialRefreshRate;
-  timer = std::chrono::high_resolution_clock::now();
-  refreshRate = std::chrono::milliseconds(initialRefreshRate);
-
-  snake.push_back(CPoint(20, 10));
-  snake.push_back(CPoint(21, 10));
-  snake.push_back(CPoint(22, 10));
-
-  generateFruit();
-
-  snakeDirection = DIR_LEFT;
-  directionLock = false;
+  resetGame();
 }
 
 void CSnake::paint() {
@@ -155,14 +139,14 @@ bool CSnake::handleEvent(int key) {
     return false;
   }
 
-  if(key == 112) {
+  if(key == 'p') {
     if(gamePaused) timer = std::chrono::high_resolution_clock::now();
     gamePaused = !gamePaused;
     showHelp = false;
     return true;
   }
 
-  if(key == 104 && gamePaused) {
+  if(key == 'h' && gamePaused) {
     showHelp = !showHelp;
     return true;
   }
@@ -189,8 +173,8 @@ bool CSnake::handleEvent(int key) {
     }
   }
 
-  if(key == 114) {
-    resetGame();
+  if(key == 'r') {
+    resetGame(true);
   }
 
   if(gamePaused) {
@@ -211,7 +195,7 @@ bool CSnake::shouldRefresh() {
   return false;
 }
 
-void CSnake::resetGame() {
+void CSnake::resetGame(bool forceRepaint) {
   gamePaused = true;
   showHelp = true;
   gameOver = false;
@@ -229,7 +213,7 @@ void CSnake::resetGame() {
 
   snakeDirection = DIR_LEFT;
   directionLock = false;
-  paint();
+  if(forceRepaint) paint();
 }
 
 void CSnake::checkSnakeIntegrity() {
